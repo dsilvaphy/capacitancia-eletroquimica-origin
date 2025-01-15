@@ -1,6 +1,6 @@
-# 🔬 Cálculo de Propriedades Eletroquímicas com Origin
+# 🔬 Cálculo de Capacitância Eletroquímica com Origin
 
-Este repositório contém um script e um arquivo de projeto do Origin (`opj`) desenvolvido para análise de dados de experimentos eletroquímicos. O objetivo principal é processar dados de impedância, calcular propriedades físicas e organizar os resultados em planilhas automáticas.
+Este repositório contém um script e um arquivo de projeto do Origin (`opj`) desenvolvido para análise de dados de experimentos eletroquímicos. O objetivo principal é processar dados de impedância, calcular propriedades físicas como a capacitância e organizar os resultados em planilhas automáticas.
 
 ---
 
@@ -49,21 +49,51 @@ O script inclui subrotinas para diferentes tipos de processamento e análise:
 
 ## 📖 Como Utilizar
 
-1. **Abra o Arquivo de Projeto no Origin:**
-   - Carregue o arquivo `gpe_universal.opj` no Origin.
+1. **Configuração Inicial:**
+   - Abra o Origin e selecione um novo projeto.
+   - Navegue para `File > Open > Templates (*.otm)` e abra o arquivo `gpe_universal` (localizado no diretório do projeto).
 
-2. **Carregue os Dados:**
-   - Insira seus dados experimentais nas planilhas correspondentes do projeto.
+2. **Importação de Dados:**
+   - Importe os dados de impedância obtidos do Autolab. Certifique-se de que as medições estão ordenadas cronologicamente para manter a consistência.
 
-3. **Configure o Script:**
-   - Abra o script `kapparho.txt`.
-   - Atualize os parâmetros iniciais, como `NScan`, `NFreq`, `Vinicial`, e selecione a subrotina desejada.
+3. **Plotagem Inicial:**
+   - Gere um gráfico de Nyquist (log-log) para determinar os valores precisos de:
+     - **Resistência do eletrólito (`Re`)**.
+     - **Resistência de transferência de carga (`Rt`)**. Use a fórmula: `Rt = (1000 - Re) * 2` (dependendo do caso experimental).
 
-4. **Execute o Script:**
-   - No Origin, cole o script na janela de comandos e pressione **Enter** para executá-lo.
+4. **Carregue o Script no Origin:**
+   - Abra o script `kapparho.txt` no editor de texto do Origin.
+   - Copie o conteúdo e cole na janela de comandos do Origin.
 
-5. **Visualize os Resultados:**
-   - Verifique as planilhas geradas e utilize os dados organizados para análises ou exportações.
+5. **Atualize os Parâmetros no Script:**
+   - Ajuste os seguintes valores de acordo com os dados experimentais:
+     - `NScan`: Número de scans realizados.
+     - `NFreq`: Número total de frequências.
+     - `Vinicial` e `passoV` para representar os potenciais iniciais e incrementos.
+   - Habilite a subrotina desejada (por exemplo, `area` ou `freq`) removendo os comentários (`//`).
+
+6. **Atualização dos Valores na Subrotina `area`:**
+   - Insira os valores de `Re`, `Rt` e área do eletrodo diretamente na subrotina `area`:
+     ```
+     col(A)[1] = 14.65; // Re: resistência do eletrólito
+     col(A)[2] = 2000;  // Rt: resistência de transferência de carga
+     col(A)[3] = 1.131; // Área do eletrodo em cm²
+     ```
+
+7. **Execução do Script:**
+   - Salve o script como uma Custom Routine e clique no botão de execução no Origin.
+   - Verifique se os dados nas colunas foram devidamente atualizados.
+
+8. **Extração por Frequências:**
+   - Para extrair os dados relevantes de cada frequência:
+     - Habilite a subrotina `freq` no script.
+     - Verifique que ela calcula automaticamente `1/C_eff²` e `1/C_gpe²`, necessários para gráficos de Mott-Schottky.
+
+9. **Renomeação de Planilhas:**
+   - Habilite a subrotina `rename` para organizar e renomear as planilhas com base na frequência analisada.
+
+10. **Verificação Final:**
+    - Certifique-se de que as planilhas e gráficos estão atualizados e organizados corretamente.
 
 ---
 
@@ -106,3 +136,5 @@ Este script é ideal para pesquisadores e estudantes que trabalham com experimen
 Este projeto está licenciado sob a **Creative Commons Attribution-NonCommercial 4.0 International License**. Não é permitido usar o código para fins comerciais.
 
 Veja a licença completa [CC BY-NC 4.0](/creativecommons.org/licenses/by-nc/4.0/deed.pt-br).
+
+
