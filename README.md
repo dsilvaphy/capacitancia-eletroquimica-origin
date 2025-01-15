@@ -1,4 +1,4 @@
-# 🔬 Cálculo de Capacitância Eletroquímica com Origin
+# 🔬 Cálculo de Capacitância Eletroquímica com Origin 🧪
 
 Este repositório contém um script e um arquivo de projeto do Origin (`opj`) desenvolvido para análise de dados de experimentos eletroquímicos. O objetivo principal é processar dados de impedância, calcular propriedades físicas como a capacitância e organizar os resultados em planilhas automáticas.
 
