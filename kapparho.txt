@@ -1,0 +1,189 @@
+
+[Main]
+//type -b $General.Userbutton;
+
+	
+////////////////ATUALIZE OS SEGUINTES PARAMETROS:
+	NScan = 3;		//numero de scans de impedancia realizados	(em geral,eh igual ao no. de voltagens)	
+	NFreq = 30;		//numero de freq. usadas no seu projeto	
+	pulaFreq = 1;		//numero de freq. que serao puladas
+	Vinicial = -1.5; 		//valor do potencial inicial
+	passoV = 0.05;		//valor do passo de potencial
+	
+////////////////HABILITE UMA DAS SUBROTINAS ABAIXO:
+
+//	%S = area;              //atualize antes os valores de Re, Rt e area nas linhas 46-49 do programa
+//	%S = freq;              // extrai dados para freq, fixa
+//	%S = rename;			// renomeia o longName da planilha
+
+//	%S = mott;               // adiciona 1/Ceff^2 e 1/Cgpe^2 nas planilhas Freq. JA ESTA OBSOLETA
+//	%S = slice;
+//	%S = fieldline;
+
+////////////////////////SUBROTINA AREA: escreve, na 1a. coluna das planilhas KR, dados de Re, Rt e area
+if (%S == "area")
+{
+	start = 1;      //número da primeira planilha (que está contido no shortname da planilha)
+	end = NScan;       //número da última planilha (que está contido no shortname da planilha)	
+	idx = 0;
+	
+	for (num = Start; num <= End; num = num + 1) 
+{
+    string aa$ = KR$(num);     //cria o string KR0, KR1, KR2, etc., de acordo com os valores de start e end
+//--> na linha acima tem que trocar a letra laranja ("CR" ou "A") de acordo com o shortname das suas planilhas
+   
+    idx= idx + 1;
+    
+	win -a %(aa$);  // ativa a planilha aa$	
+
+//	col(A)[1]=col(C)[17]; //Re=resistencia do eletrolito, para calculo de C_2D
+	col(A)[1]=14.65; //Re=resistencia do eletrolito, para calculo de C_2D
+	col(A)[2]=2000; //Rct= resistencia de charge transfer, para calculo de C_2D
+	col(A)[3]=1.131; //area do eletrodo, em cm2
+
+}
+}	
+
+////////////////////////SUBROTINA FREQ:
+
+if (%S == "freq")
+{	
+	fr0 = 1;        //coluna da primeira freq
+	frf = NFreq;       // coluna da ultima freq a ser extraida
+
+	for (fnum = fr0; fnum <=frf; fnum = fnum + pulaFreq)
+{
+	start = 1;      //número da primeira planilha (que está contido no shortname da planilha)
+	end = NScan;       //número da última planilha (que está contido no shortname da planilha)
+	idx=0;
+	
+//	StringArray pgn; // vetor que vai coletar o nome das planilhas
+//	StringArray pgl; // vetor que vai coletar o longname das planilhas
+	
+	string bb$ = Freq$(fnum);
+	newbook name:=bb$ sheet:=1 option:=lsname;  // cria nova planilha p/ coletar dados da linha ifr 
+
+	wks.ncols = 17;
+
+	Col(1)[L]$ = V;
+	Col(2)[L]$ = freq;
+	Col(3)[L]$ = alpha;
+	Col(4)[L]$ = C_2D;
+	Col(5)[L]$ = C_eff;
+	Col(6)[L]$ = C_gpe;
+	Col(7)[L]$ = Zr;
+	Col(8)[L]$ = -Zi;
+	Col(9)[L]$ = phase;
+	Col(10)[L]$ = tempo;
+	Col(11)[L]$ = Adj.phase;
+	Col(12)[L]$ = Kappa;
+	Col(13)[L]$ = Rho;
+	Col(14)[L]$ = Omega;
+	Col(15)[L]$ = Kappa/Cgpe;
+	Col(16)[L]$ = (1/Ceff)^2;
+	Col(17)[L]$ = (1/Cgpe)^2;
+
+	for (num = Start; num <= End; num = num + 1) 
+{
+    string aa$ = KR$(num);     //cria o string KR1, KR2, KR3, etc., de acordo com os valores de start e end
+//--> na linha acima tem que trocar a letra laranja ("KR" ou "A") de acordo com o shortname das suas planilhas
+    type aa$;
+ 
+    idx= idx + 1;
+    
+	win -a %(aa$);  // ativa a planilha aa$
+	
+	copydata irng:=col(2)[fnum] orng:=[Freq$(fnum)]sheet1!col(2)[idx];   // copia a linha ifr da coluna de frequencia
+	copydata irng:=col(11)[fnum] orng:=[Freq$(fnum)]sheet1!col(3)[idx];  // copia a linha ifr da coluna de alpha
+	copydata irng:=col(13)[fnum] orng:=[Freq$(fnum)]sheet1!col(4)[idx];  // copia a linha ifr da coluna de C_2D
+	copydata irng:=col(14)[fnum] orng:=[Freq$(fnum)]sheet1!col(5)[idx];  // copia a linha ifr da coluna de C_eff
+	copydata irng:=col(15)[fnum] orng:=[Freq$(fnum)]sheet1!col(6)[idx];  // copia a linha ifr da coluna de C_gpe
+	copydata irng:=col(3)[fnum] orng:=[Freq$(fnum)]sheet1!col(7)[idx];  // copia a linha ifr da coluna de Re{Z}
+	copydata irng:=col(4)[fnum] orng:=[Freq$(fnum)]sheet1!col(8)[idx];  // copia a linha ifr da coluna de -Im{Z}
+	copydata irng:=col(6)[fnum] orng:=[Freq$(fnum)]sheet1!col(9)[idx];  // copia a linha ifr da coluna de phase{Z}
+	copydata irng:=col(7)[fnum] orng:=[Freq$(fnum)]sheet1!col(10)[idx];  // copia a linha ifr da coluna de time
+	copydata irng:=col(19)[fnum] orng:=[Freq$(fnum)]sheet1!col(11)[idx];  // copia a linha ifr da coluna de Adj.Phase
+	copydata irng:=col(20)[fnum] orng:=[Freq$(fnum)]sheet1!col(12)[idx];  // copia a linha ifr da coluna de Kappa
+	copydata irng:=col(21)[fnum] orng:=[Freq$(fnum)]sheet1!col(13)[idx];  // copia a linha ifr da coluna de Rho
+	copydata irng:=col(22)[fnum] orng:=[Freq$(fnum)]sheet1!col(14)[idx];  // copia a linha ifr da coluna de Omega
+	copydata irng:=col(23)[fnum] orng:=[Freq$(fnum)]sheet1!col(15)[idx];  // copia a linha ifr da coluna de Kappa/Cgpe
+
+	cc$=page.name$;
+    pgn.Add(cc$);        //adiciona o nome da planilha ativa para o vetor pgn
+    cc$=page.longname$;  
+    pgl.Add(cc$);        //adiciona o longname da planilha ativa para o vetor pgl
+    type cc$;
+}
+}
+}
+
+////////////////////////SUBROTINA MOTT que foi incorporada aa FREQ:
+
+if (%S == "freq")   //era a antiga subrotina mott que foi incorporada aa subrotina freq
+{
+	start = 1;      //número da primeira planilha Freq(que está contido no shortname da planilha)
+	end = NFreq;       //número da última planilha Freq (que está contido no shortname da planilha)	
+	
+	for (num = Start; num <= End; num = num + pulaFreq) 
+{
+    string aa$ = Freq$(num); 
+    win -a %(aa$);  // ativa a planilha aa$	
+	
+	for (idx = 1; idx <= NScan; idx = idx + 1) 
+{		
+	col(A)[idx]= Vinicial +(idx-1)*passoV; //calcula Voltagem
+	col(P)[idx]=(1/col(E)[idx])^2; //calcula 1/Ceff^2
+	col(Q)[idx]=(1/col(F)[idx])^2; //calcula 1/Cgpe^2
+}
+}
+}	
+
+////////////////////////SUBROTINA RENAME:
+
+if (%S == "rename")   //era a antiga subrotina mott que foi incorporada aa subrotina freq
+{
+	start = 1;      //número da primeira planilha Freq(que está contido no shortname da planilha)
+	end = NFreq;       //número da última planilha Freq (que está contido no shortname da planilha)	
+	
+	for (num = start; num <= end; num = num + pulaFreq) 
+{
+    string aa$ = Freq$(num); 
+    win -a %(aa$);  // ativa a planilha aa$	
+	string nn$;
+
+	if (col(B)[1] > 1000.)
+    {
+    	double mfreq = col(B)[1]/1000.;
+    	nn$ = F_$(mfreq,%3.1f)kHz;
+    }
+    
+    if (col(B)[1] < 1000.)
+    {
+    	double mfreq = col(B)[1];
+    	nn$ = F_$(mfreq, %3.0f)Hz;
+    }
+    
+    if (col(B)[1] < 100.)
+    {
+    	double mfreq = col(B)[1];
+    	nn$ = F_$(mfreq, %3.1f)Hz;
+    }  
+
+    if (col(B)[1] < 10.)
+    {
+    	double mfreq = col(B)[1];
+    	nn$ = F_$(mfreq, %3.2f)Hz;
+    }  
+    
+    if (col(B)[1] < 1.)
+    {
+    	double mfreq = col(B)[1]*1000.;
+    	nn$ = F_$(mfreq, %3.1f)mHz;
+    }    
+
+    Col(2)[C]$ = nn$;
+	type nn$;
+    page.longname$ = nn$;
+    wks.colwidth = 8;
+}
+} 
