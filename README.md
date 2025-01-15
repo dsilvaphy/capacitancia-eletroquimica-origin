@@ -60,10 +60,19 @@ O script inclui subrotinas para diferentes tipos de processamento e análise:
    - Gere um gráfico de Nyquist (log-log) para determinar os valores precisos de:
      - **Resistência do eletrólito (`Re`)**.
      - **Resistência de transferência de carga (`Rt`)**. Use a fórmula: `Rt = (1000 - Re) * 2` (dependendo do caso experimental).
+    
+<div align="center">
+ <img src="https://github.com/dsilvaphy/capacitancia-eletroquimica-origin/blob/main/capturas/Imagem1.png" width="250" height="200">
+</div>
 
 4. **Carregue o Script no Origin:**
    - Abra o script `kapparho.txt` no editor de texto do Origin.
    - Copie o conteúdo e cole na janela de comandos do Origin.
+  
+<div align="center">
+ <img src="https://github.com/dsilvaphy/capacitancia-eletroquimica-origin/blob/main/capturas/Imagem2.png" width="750" height="200">
+</div>
+
 
 5. **Atualize os Parâmetros no Script:**
    - Ajuste os seguintes valores de acordo com os dados experimentais:
@@ -71,6 +80,11 @@ O script inclui subrotinas para diferentes tipos de processamento e análise:
      - `NFreq`: Número total de frequências.
      - `Vinicial` e `passoV` para representar os potenciais iniciais e incrementos.
    - Habilite a subrotina desejada (por exemplo, `area` ou `freq`) removendo os comentários (`//`).
+  
+<div align="center">
+ <img src="https://github.com/dsilvaphy/capacitancia-eletroquimica-origin/blob/main/capturas/Imagem3.png" width="750" height="200">
+</div>
+
 
 6. **Atualização dos Valores na Subrotina `area`:**
    - Insira os valores de `Re`, `Rt` e área do eletrodo diretamente na subrotina `area`:
@@ -80,20 +94,45 @@ O script inclui subrotinas para diferentes tipos de processamento e análise:
      col(A)[3] = 1.131; // Área do eletrodo em cm²
      ```
 
+<div align="center">
+ <img src="https://github.com/dsilvaphy/capacitancia-eletroquimica-origin/blob/main/capturas/Imagem4.png" width="750" height="250">
+</div>
+
+
 7. **Execução do Script:**
    - Salve o script como uma Custom Routine e clique no botão de execução no Origin.
    - Verifique se os dados nas colunas foram devidamente atualizados.
+  
+<div align="center">
+ <img src="https://github.com/dsilvaphy/capacitancia-eletroquimica-origin/blob/main/buttom_custom.png" width="90" height="90">
+</div>
+
 
 8. **Extração por Frequências:**
    - Para extrair os dados relevantes de cada frequência:
      - Habilite a subrotina `freq` no script.
      - Verifique que ela calcula automaticamente `1/C_eff²` e `1/C_gpe²`, necessários para gráficos de Mott-Schottky.
+    
+
+<div align="center">
+ <img src="https://github.com/dsilvaphy/capacitancia-eletroquimica-origin/blob/main/capturas/Imagem7.png" width="750" height="250">
+</div>
+
 
 9. **Renomeação de Planilhas:**
    - Habilite a subrotina `rename` para organizar e renomear as planilhas com base na frequência analisada.
 
+<div align="center">
+ <img src="https://github.com/dsilvaphy/capacitancia-eletroquimica-origin/blob/main/capturas/Imagem8.png" width="750" height="250">
+</div>
+
+
 10. **Verificação Final:**
     - Certifique-se de que as planilhas e gráficos estão atualizados e organizados corretamente.
+   
+<div align="center">
+ <img src="https://github.com/dsilvaphy/capacitancia-eletroquimica-origin/blob/main/capturas/Imagem5.png" width="750" height="250">
+</div>
 
 ---
 
